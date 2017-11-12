@@ -102,3 +102,7 @@ ENV/
 
 # VIM
 *.swp
+
+# Lepton
+*.pgm
+*.jpg
