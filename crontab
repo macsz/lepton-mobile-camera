@@ -1,0 +1,1 @@
+@reboot cd /home/pi/lepton-mobile-camera && python camera.py &
