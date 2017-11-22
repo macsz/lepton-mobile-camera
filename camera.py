@@ -6,7 +6,7 @@ import subprocess
 from timeit import default_timer as timer
 
 from enum import Enum
-from tools import log, map, pins, SystemStatus
+from tools import log, map, pins, SystemStatus, colors
 
 def setColor(color):
     if issubclass(SystemStatus, Enum):
@@ -60,11 +60,13 @@ def main():
         if system_status is SystemStatus.RECORDING:
             time_start = timer()
             cmd = ["camera/capture/capture.exe"]
+            setColor(SystemStatus.CAPTURED)
             p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             out, err = p.communicate()
+            setColor(SystemStatus.RECORDING)
             time_stop = timer()
             print('Captured in', time_stop - time_start)
-            time.sleep(0.1)
+            time.sleep(0.2)
         else:
             time.sleep(1)
 

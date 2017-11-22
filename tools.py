@@ -17,7 +17,7 @@ colors = {
 class SystemStatus(Enum):
     READY = colors['green']
     RECORDING = colors['red']
-    CAPTURED = colors['red_light']
+    CAPTURED = colors['blue']
 
 def log(*args):
     print(args)
