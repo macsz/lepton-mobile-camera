@@ -1,12 +1,28 @@
 #!/usr/bin/env python
 
+import cv2
 import RPi.GPIO as GPIO
 import time
 import subprocess
+import multiprocessing
 from timeit import default_timer as timer
 
 from enum import Enum
 from tools import log, map, pins, SystemStatus, colors
+
+
+def usb_camera_capture(e):
+    cam = cv2.VideoCapture(0)
+    im_num = 0
+
+    while True:
+        e.wait()
+        e.clear()
+        s, img = cam.read()
+        if s:
+            cv2.imwrite('rgb/rgb_%d.jpg' % im_num, img)
+            log('Saved RGB grame to rgb_%s' % im_num)
+            im_num += 1
 
 def setColor(color):
     if issubclass(SystemStatus, Enum):
@@ -56,6 +72,9 @@ def swLed(ev=None):
     log(system_status)
 
 def main():
+    e = multiprocessing.Event()
+    p_usb_cam = multiprocessing.Process(name='UsbCamera', target=usb_camera_capture, args=(e,))
+    p_usb_cam.start()
     while True:
         if system_status is SystemStatus.RECORDING:
             time_start = timer()
@@ -66,6 +85,7 @@ def main():
             setColor(SystemStatus.RECORDING)
             time_stop = timer()
             print('Captured in', time_stop - time_start)
+            e.set()
             time.sleep(0.2)
         else:
             time.sleep(1)
