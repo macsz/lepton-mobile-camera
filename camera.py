@@ -5,6 +5,7 @@ import RPi.GPIO as GPIO
 import time
 import subprocess
 import multiprocessing
+import os
 from timeit import default_timer as timer
 
 from enum import Enum
@@ -13,7 +14,7 @@ from tools import log, map, pins, SystemStatus, colors
 
 def usb_camera_capture(e):
     cam = cv2.VideoCapture(0)
-    im_num = 0
+    im_num = len(os.listdir('rgb'))
 
     while True:
         e.wait()
